@@ -1,0 +1,2 @@
+# The downloader uses Python's standard library; DuckDB also reads Parquet/CSV.
+duckdb==1.4.4
