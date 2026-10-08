@@ -1,10 +1,78 @@
-# NFL revenge-game analysis — Stage 1
+# NFL revenge-game analysis — Stages 1 and 2
 
-This stage prepares a reproducible dataset for the question in [project.md](project.md).
-It stops at downloading, importing, cleaning, and checking data. There is no
-former-team classification, revenge-game calculation, rolling baseline, or dashboard yet.
+Stage 1 prepares a reproducible dataset for the question in [project.md](project.md).
+Stage 2 identifies games against qualifying former teams using only earlier
+appearances. There are no rolling baselines, revenge uplift calculations, or dashboards yet.
 
-## Start here
+## Stage 2: former teams and revenge games
+
+From the project folder, run:
+
+```bash
+cd /Users/kushg/SQL_NFL_Project
+source .venv/bin/activate
+python scripts/build_stage2.py
+python scripts/query.py sql/06_stage2_inspect.sql
+python -m unittest discover -s tests -v
+```
+
+The builder runs both Stage 1 and Stage 2 database checks and confirms Stage 1 data
+was not changed. The sample query is read-only. The tests use isolated in-memory
+databases; their small synthetic examples never enter the real project database.
+
+The current snapshot has **875 revenge-game performances by 359 players**, including
+**545 first qualifying meetings** across 61,977 player-games. A performance is one
+player in one game; several players can qualify in the same NFL game.
+
+The rule is: find the same stable `player_id` in earlier records, count appearances
+for the current opponent, and require at least four. Only records with
+`earlier.game_date < current.game_date` count. Current-day and future records cannot
+contribute. Team codes already represent franchises, so Oakland and Las Vegas count
+as the same team. Names are used only for display.
+
+`is_first_meeting_with_former_team` means the first **qualifying** revenge game for a
+player/opponent franchise in this dataset. Facing a team before playing for it does
+not count as a former-team meeting. Meetings before the four-appearance threshold
+do not consume the flag. The flag does not reset after another transfer or a return
+to the same team. Different former teams have separate first-meeting flags.
+
+History begins in 2015 and uses only the cleaned regular-season QB/RB/WR/TE records.
+It is not complete career history: pre-2015 service, postseason games, other positions,
+and unrecorded appearances are not counted. Early seasons therefore have less observable
+history, and "first" means first observed qualifying meeting, not necessarily first
+career reunion. No new historical data was downloaded in Stage 2.
+
+Read [docs/stage2_results.md](docs/stage2_results.md) for ten manually checked examples,
+boundary cases, counts by season, and validation evidence. The machine-readable report
+is `data/processed/stage2_validation_report.json`.
+
+| New file | Purpose |
+| --- | --- |
+| `sql/04_team_history.sql` | History summary, history as of each game, all-game flags, and revenge-game view. |
+| `sql/05_stage2_validation.sql` | Nineteen checks and season counts for Stage 2. |
+| `sql/06_stage2_inspect.sql` | Read-only samples and independent appearance ledgers for the manual examples. |
+| `scripts/build_stage2.py` | Runs Stage 2 SQL in a transaction, checks both stages, and writes a report. |
+| `tests/test_stage2.py` | Threshold, same-day exclusion, identity, return-stint, and future-removal tests. |
+| `docs/stage2_results.md` | Reviewed examples, scope limits, and checkpoint results. |
+| `data/processed/stage2_validation_report.json` | Latest successful Stage 2 checks and counts. |
+
+Stage 2 uses views (saved queries), so a Stage 1 reload automatically flows through
+them. Run the Stage 2 builder afterward to refresh its validation report. The existing
+Stage 1 scripts, SQL, and dependency requirements are unchanged.
+
+To rerun and verify the entire implemented project:
+
+```bash
+python scripts/load_data.py --offline --verify-rerun
+python scripts/build_stage2.py
+python scripts/query.py sql/06_stage2_inspect.sql
+python -m unittest discover -s tests -v
+```
+
+`--verify-rerun` compares Stage 1 against its saved successful report; omit that flag
+for the very first ingestion on a new machine. Stop here for review before Stage 3.
+
+## Stage 1: setup and ingestion
 
 Open Terminal and run these commands one line at a time:
 
@@ -140,17 +208,9 @@ wheel was installed into `.venv` without network access. The Python downloader i
 implemented, but its live HTTPS download path could not be verified here. The actual
 loads and repeated-load verification used those saved, real downloads.
 
-Git is installed (2.50.1), but `git init` failed with `Operation not permitted` when
-trying to create `.git`. No repository, commit, or remote was created. To finish that
-setup step yourself from your normal Terminal:
-
-```bash
-cd /Users/kushg/SQL_NFL_Project
-git init
-git status --short
-```
-
-Do not commit or publish yet. `.gitignore` is already prepared to exclude the virtual
+During Stage 1, `git init` was blocked while trying to create `.git`. You subsequently
+initialized Git and saved Stage 1 in commit `b6a1f4a` (`Complete stage 1 data ingestion`).
+Stage 2 makes no commits or publishing changes. `.gitignore` excludes the virtual
 environment, raw downloads, database files, generated reports, and `.env` secrets.
 
 ## Files you can inspect
@@ -185,4 +245,4 @@ python scripts/query.py sql/03_inspect.sql
 
 The query runner opens the database read-only, so exploration cannot alter it.
 Read `sql/01_ingestion.sql` next, starting with the final `CREATE OR REPLACE VIEW`.
-Pause here to review before beginning former-team or revenge-game logic.
+For former-team logic, continue to `sql/04_team_history.sql`; pause before Stage 3.
