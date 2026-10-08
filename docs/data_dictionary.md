@@ -1,4 +1,4 @@
-# Stages 1–3 data dictionary
+# Stages 1–4 data dictionary
 
 `raw_player_weekly_stats` retains all source columns and rows from the 11 Parquet
 files. `filename` and `source_file` add the local file path for traceability.
@@ -155,3 +155,118 @@ player's first eligible revenge game. Future cohort membership never enters an
 individual baseline. This is a descriptive comparison, not a forecasting cohort
 or a causal estimate. The 2015 history boundary and regular-season/position limits
 from earlier stages also apply to every rolling window.
+
+## Stage 4 views and exported tables
+
+Every Stage 4 object is a view prefixed `stage4_`. No earlier view/table is replaced.
+Data transformations, metric definitions, original estimates, percentiles, and
+segments are SQL; Python only orchestrates, resamples, computes inferential
+statistics, and serializes outputs.
+
+| View | Grain / meaning |
+| --- | --- |
+| `stage4_game_context` | Every Stage 3 feature row with usage totals, venue, and elapsed former-team time. |
+| `stage4_metric_actuals` | Nine metric rows per player-game, including undefined and position-inapplicable metrics. |
+| `stage4_metric_features` | Same grain, with past-only baseline, coverage counts, and residual. |
+| `stage4_paired_players` | Player IDs with eligible revenge and non-revenge observations; 359 here. |
+| `stage4_analysis_games` | Eligible PPR rows for paired players; same 24,309 rows as Stage 3. |
+| `stage4_analysis_metrics` | Applicable metrics for those games, including NULL ratios/baselines. |
+| `stage4_player_comparisons` | One row per player, with each group's n, mean, median, exceeded percentage, and differences. |
+| `stage4_segments` | One row per breakdown/segment/group, with n, players, PPR summaries, and elapsed-day summaries. |
+| `stage4_usage_efficiency` | Current position/metric/group summaries and availability counts. |
+| `stage4_usage_efficiency_differences` | Revenge-minus-non-revenge mean residual contrast per position/metric. |
+| `stage4_outlier_cutoffs` | One common pooled 1st/99th-percentile pair for the full comparison cohort. |
+| `stage4_sensitivity_games` | Player-games per raw/trimmed/winsorized variant; transformed `analysis_residual` is separate from original `performance_residual`. |
+| `stage4_sensitivity_groups` | Group n, mean, and median by variant. |
+| `stage4_sensitivity_results` | Pooled mean/median differences and equal-player mean differences by variant. |
+| `stage4_extreme_revenge` | Largest ten positive and ten negative revenge residuals, with IDs, actual/expected PPR, and ranks. |
+| `stage4_baseline_audit` | Independent date-bounded reconstruction for each player-game/metric. |
+| `stage4_validation_checks` | Twenty-one Stage 4 checks with severity and problem count. |
+
+### Context and metric definitions
+
+`is_home` means the player's team is the schedule-designated home team. Neutral-site
+games retain that designation. `days_since_former_team` is the date difference
+from `last_prior_opponent_game_date` to the current game, only for revenge games.
+It is **time since the most recent recorded appearance**, not the actual departure
+date. It uses the most recent prior stint. `departure_bucket` is `01_0_to_365_days`,
+`02_366_to_730_days`, `03_731_to_1460_days`, or `04_1461_plus_days`, with inclusive
+integer-day endpoints. Non-revenge rows have NULL elapsed time and bucket.
+
+| Metric | Actual value | Used in summaries for |
+| --- | --- | --- |
+| `pass_attempts` | Source `attempts` | QB |
+| `carries` | Source `carries` | All four positions |
+| `targets` | Source `targets` | RB, WR, TE |
+| `receptions` | Source `receptions`, separate from opportunities | All four positions |
+| `opportunities` | QB: attempts + carries; RB/WR/TE: carries + targets | All four positions |
+| `passing_yards_per_attempt` | passing_yards / attempts | QB |
+| `rushing_yards_per_carry` | rushing_yards / carries | All four positions |
+| `receiving_yards_per_target` | receiving_yards / targets | RB, WR, TE |
+| `touchdowns_per_opportunity` | `opportunity_tds` / `opportunities` | All four positions |
+
+`opportunity_tds` is passing_tds + rushing_tds for QB and rushing_tds + receiving_tds
+for RB/WR/TE. Rare QB receiving and non-QB passing plays are excluded from this
+position-specific opportunity/TD measure; source PPR still contains its original
+full scoring. Receptions are already a subset of targets and are never added again.
+Null inputs propagate rather than becoming zero. Ratios are defined only for
+strictly positive denominators and known numerators; NULL, zero, and negative
+denominators produce NULL. Negative usage also fails validation.
+
+`metric_family` is `usage` or `efficiency`; `denominator` is populated only for ratios.
+`position_applicable` controls summaries, after calculating the windows over all
+appearances. Historical opportunities use each historical row's own position;
+windows follow stable IDs across position changes, teams, seasons, and gaps.
+
+| Metric feature | Meaning |
+| --- | --- |
+| `actual` | Current count or ratio, or NULL when unknown/undefined. |
+| `window_n` | Number of the previous eight appearances actually available, 0–8. |
+| `valid_prior_n` | Non-NULL metric values among those appearances. |
+| `window_first_date`, `window_last_date` | Earliest/latest appearance in that window, including undefined ratios. |
+| `prior_mean` | Mean of valid historical values for inspection, including short windows. |
+| `baseline_available` | At least four prior appearances and four valid values; usage additionally requires no missing historical value in the window. |
+| `expected` | `prior_mean` only when baseline_available; otherwise NULL. |
+| `residual` | actual − expected when both exist; otherwise NULL. |
+
+Efficiency expected values are **means of valid game-level ratios**, not ratios of
+summed yardage to summed attempts. Zero-denominator games still consume a place in
+the previous-eight-appearance window; an older ninth game can never backfill them.
+No residual enters analysis unless the game's Stage 3 PPR eligibility also holds.
+
+### Summary fields and inference CSV
+
+Usage/efficiency summaries retain `eligible_games`, `actual_n`, `expected_n`,
+`residual_n`, and `residual_players`; undefined current values and unavailable
+baselines have separate counts and can overlap. `mean_actual_all_valid` uses all
+defined actual values. `mean_actual_paired` and `mean_expected_paired` use the same
+rows as `mean_residual`, so their difference agrees with that mean residual.
+Efficiency metrics can have different player/game subsets in the two groups.
+These descriptive contrasts are not an adjusted causal decomposition of PPR.
+
+Player comparison fields `revenge_n`, `non_revenge_n`, `revenge_mean`,
+`non_revenge_mean`, and `mean_difference` define the primary within-player effect.
+The equivalent median and percentage fields use each player's own group summaries.
+Exceeded retains Stage 3's >1e-9 PPR tolerance, with ties in the denominator.
+
+`reports/tables/stage4_inference.csv` contains six effects. `pooled_mean`,
+`pooled_median`, and `pooled_pct` compare equally weighted games in each group.
+`equal_player_mean`, `equal_player_median`, and `equal_player_pct` average the
+corresponding **within-player differences**, weighting players equally. In
+particular, `equal_player_median` is the mean of player median differences, not a
+weighted pooled median and not the median of player effects.
+
+`estimate`, `ci_low`, `ci_high` use PPR points except percentage effects, which use
+percentage points. Bounds are linearly interpolated 2.5th/97.5th percentiles of
+5,000 whole-player bootstrap estimates. Every draw samples 359 players with
+replacement and retains every selected player's games with full multiplicity.
+The bootstrap seed is 20261008. Only the primary `equal_player_mean` has a p-value:
+a two-sided player sign-flip test with 5,000 draws, seed 20261009, and plus-one
+Monte Carlo correction. Other p-value cells are empty and `test=not_tested`.
+Player independence and null sign symmetry are assumptions, not established facts.
+
+`stage4_bootstrap_draws.csv` has one row per iteration and six effect columns.
+`stage4_validation.csv` has stage, check_name, severity, and problem_count.
+Other CSVs mirror their named SQL views; `stage4_departure_games.csv` exports
+individual revenge-game dates and elapsed time for auditing. All CSVs have headers,
+stable row order, unrounded numeric results, and empty fields for NULL.

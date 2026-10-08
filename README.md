@@ -1,9 +1,63 @@
-# NFL revenge-game analysis — Stages 1–3
+# NFL revenge-game analysis — Stages 1–4
 
 Stage 1 prepares a reproducible dataset for the question in [project.md](project.md).
 Stage 2 identifies games against qualifying former teams using only earlier
 appearances. Stage 3 adds rolling performance baselines and compares revenge games
 with non-revenge games from the same players. There is no dashboard.
+
+## Stage 4: inference, usage, efficiency, and sensitivity
+
+The primary equal-player mean difference is **+0.067 PPR**, with a **95% player-clustered
+bootstrap interval of −0.443 to +0.604** and a **two-sided player sign-flip p-value of
+0.812**. Conclusion: **No statistically distinguishable effect** on mean residuals.
+The point estimate is less than one tenth of a PPR point; statistical significance
+and football importance are different questions. This does not prove an exact zero
+effect or establish causality.
+
+The pooled game-weighted difference is −0.021 PPR (95% CI −0.406 to +0.381).
+Both estimates use the validated 875 revenge games and 23,434 non-revenge games
+from 359 players. Trimming and winsorization leave mean differences close to zero.
+Usage and efficiency findings vary by position and are descriptive. A positive
+secondary average-of-player-medians contrast is discussed explicitly in the report;
+it does not change the primary mean conclusion.
+
+Run after the existing Stage 3 build:
+
+```bash
+source .venv/bin/activate
+python scripts/analyze_stage4.py
+python -m unittest discover -s tests -v
+python scripts/query.py sql/14_stage4_inspect.sql
+```
+
+The script runs all stages' SQL checks, adds only `stage4_` views, and verifies
+that every Stage 1–3 table/view, validated summary, raw file, earlier pipeline file,
+and saved earlier validation report is unchanged. It uses 5,000 whole-player
+bootstrap draws with seed `20261008` and 5,000 sign flips with seed `20261009`.
+Python 3.9.6 and the existing pinned DuckDB 1.4.4 were used; **no new dependencies**.
+The production CLI rejects fewer than 5,000 iterations. Explicit overrides are
+`--iterations 10000 --seed 20261008`; the published report uses the defaults.
+
+Read [docs/stage4_results.md](docs/stage4_results.md) for definitions, all primary
+intervals, exploratory segments, usage and valid-ratio sample sizes, sensitivity,
+test assumptions, and validation. [reports/tables/](reports/tables/) contains 12
+CSV tables, including all bootstrap draws and one comparison per player.
+`data/processed/stage4_validation_report.json` records fingerprints, code and CSV
+hashes, seeds, versions, and checks; a failed build writes `stage4_failed_run.json`.
+CSV blanks mean unavailable/NULL, not zero. Rerun Stage 4 after changing upstream
+data; reports are snapshots and do not refresh just because a view changes.
+
+| File | Purpose |
+| --- | --- |
+| `sql/11_stage4_features.sql` | Shared usage/efficiency windows, cohort, and player contrasts. |
+| `sql/12_stage4_summaries.sql` | Descriptive segments, usage/efficiency comparisons, and outlier views. |
+| `sql/13_stage4_validation.sql` | Independent historical-window audit and 21 checks. |
+| `sql/14_stage4_inspect.sql` | Read-only inspection queries. |
+| `scripts/analyze_stage4.py` | Transactional build, inference, CSV export, and preservation checks. |
+| `tests/test_stage4.py` | Fourteen new tests, including a full 5,000-draw reproducibility check. |
+
+Stages 1–3 SQL, scripts, tests, source records, and checkpoint reports are preserved.
+Stage 4 is complete and stops for review; no dashboard has been built.
 
 ## Stage 3: rolling baselines and comparison
 
@@ -76,7 +130,7 @@ identification view. Stage 3 uses additional views rather than replacing it. Rer
 earlier stages updates those views automatically; rerun Stage 3 afterward to refresh
 its validation report. Failures roll back the build and write `stage3_failed_run.json`.
 
-To rebuild and check all implemented stages:
+To rebuild and check all implemented stages (Stage 4 added after Stage 3):
 
 ```bash
 cd /Users/kushg/SQL_NFL_Project
@@ -84,13 +138,15 @@ source .venv/bin/activate
 python scripts/load_data.py --offline --verify-rerun
 python scripts/build_stage2.py
 python scripts/build_stage3.py
+python scripts/analyze_stage4.py
 python -m unittest discover -s tests -v
 python scripts/query.py sql/10_stage3_inspect.sql
 ```
 
 The first ingestion on a fresh machine should omit `--offline --verify-rerun` so it
 can download data and establish a reference report. Tests use memory-only copies;
-synthetic rows never enter the project database. Stage 3 stops here for review.
+synthetic rows never enter the project database. The original Stage 3 review
+checkpoint is preserved; the current stopping point is Stage 4 review above.
 
 ## Stage 2: former teams and revenge games
 

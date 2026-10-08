@@ -1,0 +1,7 @@
+variant,game_group,games,players,mean_residual,median_residual
+raw,non_revenge,23434,359,-0.1561141554599142,-0.925
+raw,revenge,875,359,-0.17728408163265316,-0.7375
+trimmed_1_99,non_revenge,22962,359,-0.23959089862754568,-0.925
+trimmed_1_99,revenge,859,353,-0.204372609346416,-0.7125
+winsorized_1_99,non_revenge,23434,359,-0.17651916933881165,-0.925
+winsorized_1_99,revenge,875,359,-0.18758499591836764,-0.7375
