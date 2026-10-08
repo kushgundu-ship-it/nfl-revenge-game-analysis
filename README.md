@@ -1,8 +1,96 @@
-# NFL revenge-game analysis — Stages 1 and 2
+# NFL revenge-game analysis — Stages 1–3
 
 Stage 1 prepares a reproducible dataset for the question in [project.md](project.md).
 Stage 2 identifies games against qualifying former teams using only earlier
-appearances. There are no rolling baselines, revenge uplift calculations, or dashboards yet.
+appearances. Stage 3 adds rolling performance baselines and compares revenge games
+with non-revenge games from the same players. There is no dashboard.
+
+## Stage 3: rolling baselines and comparison
+
+```bash
+cd /Users/kushg/SQL_NFL_Project
+source .venv/bin/activate
+python scripts/build_stage3.py
+python scripts/query.py sql/10_stage3_inspect.sql
+```
+
+`player_game_features` keeps all 61,977 cleaned player-games and all Stage 2 flags.
+For each stable player ID, SQL orders appearances by game date and uses
+`ROWS BETWEEN 8 PRECEDING AND 1 PRECEDING`: up to eight records before the current
+one. Byes and missed games do not add rows. The history continues across seasons,
+team changes, and eligible positions; it does not reset at a transfer or January 1.
+
+The expected PPR is the mean of those earlier values. The sample standard deviation
+measures their spread using the `n - 1` denominator. With four or more prior records,
+the performance residual (also called `revenge_uplift`) is actual minus expected PPR.
+The standardized `revenge_score` divides that residual by the sample standard deviation.
+No effect is calculated with fewer than four prior appearances. Preliminary means
+for one to three prior appearances remain visible only for inspection.
+
+A zero or missing standard deviation produces a NULL score, with an explicit reason.
+An otherwise eligible zero-variance game still contributes to raw residual summaries.
+Missing PPR is never filled with zero or silently replaced by an older ninth game;
+incomplete windows are ineligible. Stage 1 checks enforce complete, finite source PPR.
+
+Both analysis views read the same features and apply the same eligibility rule:
+
+- `analysis_revenge_games`: 875 revenge performances by 359 players.
+- `analysis_comparison_games`: 23,434 non-revenge performances from those same players.
+
+This is a retrospective cohort: qualifying players' normal games before and after
+their first revenge game are included. Knowing who belongs to this cohort does not
+enter an earlier game's baseline or label. The comparison is weighted by player-game,
+so players with more appearances contribute more rows; it is not a matched causal
+estimate or an equal-weight average of player effects.
+
+| Group | Games | Exceeded baseline | Mean actual | Mean expected | Mean residual | Median residual |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Revenge | 875 | 40.69% | 6.681 | 6.858 | -0.177 | -0.738 |
+| Non-revenge, same players | 23,434 | 40.78% | 8.581 | 8.737 | -0.156 | -0.925 |
+
+Both groups average slightly below their rolling baselines. The mean residual
+difference (revenge minus non-revenge) is approximately -0.021 PPR. This describes
+the snapshot and does not establish that facing a former team causes any change.
+No significance test, opponent/usage adjustment, or uncertainty interval is claimed.
+For the exceeded percentage, residuals within 1e-9 PPR of zero are numerical ties,
+not wins; this avoids binary floating-point roundoff misclassifying tied games.
+
+[docs/stage3_results.md](docs/stage3_results.md) contains the position and first/later
+meeting summaries, four independently calculated real examples, and validation
+details. `sql/10_stage3_inspect.sql` shows each example's eight supporting game IDs,
+dates, teams, and PPR values so you can trace every calculation.
+
+| New file | Purpose |
+| --- | --- |
+| `sql/07_player_game_features.sql` | Shared rolling features, baseline contributors, and analysis group views. |
+| `sql/08_stage3_summaries.sql` | Overall, position, and first/later-meeting summaries. |
+| `sql/09_stage3_validation.sql` | Independent strict-date baseline reconstruction and 24 data checks. |
+| `sql/10_stage3_inspect.sql` | Read-only summaries, checks, and supporting histories for real examples. |
+| `scripts/build_stage3.py` | Builds Stage 3, checks all stages, and verifies Stage 1/2 are unchanged. |
+| `tests/test_stage3.py` | Eight tests covering boundaries, independent real arithmetic, and future-data removal. |
+| `docs/stage3_results.md` | Human-readable comparison and worked calculations. |
+| `data/processed/stage3_validation_report.json` | Current checks, summaries, coverage, and score availability. |
+
+Stage 1/2 SQL and scripts are unchanged, including the Stage 2 `fact_revenge_games`
+identification view. Stage 3 uses additional views rather than replacing it. Rerunning
+earlier stages updates those views automatically; rerun Stage 3 afterward to refresh
+its validation report. Failures roll back the build and write `stage3_failed_run.json`.
+
+To rebuild and check all implemented stages:
+
+```bash
+cd /Users/kushg/SQL_NFL_Project
+source .venv/bin/activate
+python scripts/load_data.py --offline --verify-rerun
+python scripts/build_stage2.py
+python scripts/build_stage3.py
+python -m unittest discover -s tests -v
+python scripts/query.py sql/10_stage3_inspect.sql
+```
+
+The first ingestion on a fresh machine should omit `--offline --verify-rerun` so it
+can download data and establish a reference report. Tests use memory-only copies;
+synthetic rows never enter the project database. Stage 3 stops here for review.
 
 ## Stage 2: former teams and revenge games
 
@@ -60,7 +148,7 @@ Stage 2 uses views (saved queries), so a Stage 1 reload automatically flows thro
 them. Run the Stage 2 builder afterward to refresh its validation report. The existing
 Stage 1 scripts, SQL, and dependency requirements are unchanged.
 
-To rerun and verify the entire implemented project:
+To rerun and verify Stages 1 and 2:
 
 ```bash
 python scripts/load_data.py --offline --verify-rerun
@@ -70,7 +158,7 @@ python -m unittest discover -s tests -v
 ```
 
 `--verify-rerun` compares Stage 1 against its saved successful report; omit that flag
-for the very first ingestion on a new machine. Stop here for review before Stage 3.
+for the very first ingestion on a new machine. Stage 3 commands are above.
 
 ## Stage 1: setup and ingestion
 
@@ -245,4 +333,5 @@ python scripts/query.py sql/03_inspect.sql
 
 The query runner opens the database read-only, so exploration cannot alter it.
 Read `sql/01_ingestion.sql` next, starting with the final `CREATE OR REPLACE VIEW`.
-For former-team logic, continue to `sql/04_team_history.sql`; pause before Stage 3.
+For former-team logic, continue to `sql/04_team_history.sql`, then read
+`sql/07_player_game_features.sql` for rolling baselines.
