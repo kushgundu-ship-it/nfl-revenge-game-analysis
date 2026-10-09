@@ -1,0 +1,627 @@
+{
+  "passed": true,
+  "stage1_4_unchanged_during_validation": true,
+  "stage1_4_matches_pre_stage5_baseline": true,
+  "protected_sha256": {
+    "data/processed/nfl.duckdb": "4e82330ff4f4372622414a2a8e07bf565501631021e85b11323de9fcec9a1cef",
+    "data/processed/stage2_validation_report.json": "d3a26187a022774bf542c25b6fd25911f14c819271edc831cf505258be6e035e",
+    "data/processed/stage3_validation_report.json": "9e13ed0fbc29d21f134a23f3eb3a69488ddcb74a02d2f27ae2ac34b30a10593e",
+    "data/processed/stage4_validation_report.json": "8660cf48bd592efcfaf6b8e239603a4dd2071fd30182b1fb20bf84145dbc3d09",
+    "data/processed/validation_report.json": "9ae86bcc9506a2fa8c1a533695cde411e7fa0c551883365dbbe095f824e1a455",
+    "data/raw/.gitkeep": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "data/raw/games.csv": "569cd735786cda591cb887d589d663c26b2164409e83fe544bccbcc9cd0111e1",
+    "data/raw/manifest.json": "a06d706b0d970026b23d0d180c71d824b80ccee1582ae36bdfaf8a988957850f",
+    "data/raw/stats_player_week_2015.parquet": "c2fffc7cc53e137c1c8bffe896e1c0300ddf2ad4b601ab4985f4bb7aeb8ed59a",
+    "data/raw/stats_player_week_2016.parquet": "f9d648fdf1f26d60ac0ac0e02c672840b604c6b8372cbb8a8bf847fdbc047acf",
+    "data/raw/stats_player_week_2017.parquet": "23398fa5ff45dbf8aeb0986be87eed28dd92213d8f862912f95d522963e0ce8e",
+    "data/raw/stats_player_week_2018.parquet": "d40914a95fdb97245567d8d816e474547b0d28d5152259813ba1542f13a8f0f4",
+    "data/raw/stats_player_week_2019.parquet": "1a80298e2aca5a830e0dcfeb834c220bc79918211dc42e2f1e46acc39cd437c9",
+    "data/raw/stats_player_week_2020.parquet": "e788d88318a6e99b8005c1c9814423d05bb91f757d5d977d3280f2eb83927b23",
+    "data/raw/stats_player_week_2021.parquet": "2c6894499e96dcf20b060969c607a0ff4e2018f369efad6e97d88abbe77b7277",
+    "data/raw/stats_player_week_2022.parquet": "64c1684938b029d68e33d7852cbee918266c8ac7f30b4c097c0a8912b4384e52",
+    "data/raw/stats_player_week_2023.parquet": "ac776fbd7c9fefdb4069b72304f4c5fa05ae417acd49f6e4e27be14b9d7a4bbc",
+    "data/raw/stats_player_week_2024.parquet": "847569d194ca3d96b5efcf91e6eac5e18780fc47568a713fd545a82d29d155c1",
+    "data/raw/stats_player_week_2025.parquet": "2a461becaa9adb3c93a3074a3a31f1e960162a50163371a2d34e28393b5fff10",
+    "docs/data_dictionary.md": "78c18d90fd58ed37a2ad57a42a0463e8bd06fea238c6ee5acfb8131d58172650",
+    "docs/stage1_results.md": "a8b094285e32c804c03713cad1a857bd1af0e825c8a727ba5cdca9cb1235162c",
+    "docs/stage2_results.md": "1359eb6f39ffac82a592525018ad77638acc99f7ada4706ed0f0c4a3121da058",
+    "docs/stage3_results.md": "2c4b417056853959a8da9a091824f9f9a85ae9d42d7d45452876c3b322cc60c6",
+    "docs/stage4_results.md": "4f2ba5d98ada01880692678df1f212bac6a0f5827d941f6b6addbc29bc7b33e1",
+    "project.md": "a2a70eb8cce3ce338ea6599aaf5373c61651033a7b28ce3804bed30d9558204d",
+    "reports/tables/stage4_bootstrap_draws.csv": "e4d77b7544ed5a2ab1165f4384c1cecc49d9a08f63289cf790cab847c22d9430",
+    "reports/tables/stage4_departure_games.csv": "877dc365178d2fe8a6e1827854bac4e47d670f0528917c36e077e2a8629bcad6",
+    "reports/tables/stage4_extreme_revenge.csv": "a457b8d8b97d1b72170ac7c8b43f329f6aee03ed581dcfd2bd617f20b9f737e5",
+    "reports/tables/stage4_inference.csv": "cc224101ea6f4f39052245664346dd72d7f40c4e43d3b900dbb7d6df20c0f197",
+    "reports/tables/stage4_outlier_cutoffs.csv": "2d3344066ce40ae317ad3cd597ba3e95a7fa0ff251eb4108d172f6c1f5765c3b",
+    "reports/tables/stage4_player_comparisons.csv": "79f6e6d05eae43abd279f230ee1a56d5f2cd1c159cca1c022eef79c6def75bcb",
+    "reports/tables/stage4_segments.csv": "9757a597839eb3bf2cd87cbebbed7d3cadd11fbd4293d746ab9811c46bcb7d6a",
+    "reports/tables/stage4_sensitivity_groups.csv": "11847eb18c2995e5064e05b6ee72730a17dc310e5739dbe3f063f055d916a812",
+    "reports/tables/stage4_sensitivity_results.csv": "d406e1cca9e66dd26dc5abe937372ecbacb63494e5ba00971a22c217a0ee4c21",
+    "reports/tables/stage4_usage_efficiency.csv": "63f871ed509d05761cd67d85091c55f1807055bf2d366ec26bb9126c33793a1f",
+    "reports/tables/stage4_usage_efficiency_differences.csv": "6b758711c16d37db01c512f42755aff1d0f766789d02fe59ab9657874887666b",
+    "reports/tables/stage4_validation.csv": "ce1fd36d70d1c93faf0df071dc731ed580606dfc16768c962a3aa930627bc523",
+    "requirements.txt": "6408328eb39bf5d4d374559b98ad5b167395faa0a871c25bd399bdfbf9f5d207",
+    "scripts/analyze_stage4.py": "3779d6a0974d6e9375a604f9a58df14eb46b8a1de7d9ffe06d5243e5d55260b4",
+    "scripts/build_stage2.py": "60cc06bee09a8c50f817600bf18143e6e1c7041e2fb3b53d9ab6d706d77152b9",
+    "scripts/build_stage3.py": "beb367cc2c55b9e9b6644121281a65defeb3ec5b735c7eec2075fd9285a05130",
+    "scripts/load_data.py": "7cc166d8ae2da771fbd672ac1c5e6183ce38728a0cab722c9e1adc8207c0a672",
+    "scripts/query.py": "e5b3ed851ed7834ece5d046403821590c777ebdf2bd5ebff8ebb9d4387aa5d00",
+    "sql/01_ingestion.sql": "946cd04974e90de419e3b159678820be79e8468a9c0368e4663bf5d23091e5fa",
+    "sql/02_validation.sql": "80196e0e39ad25d7dd65e949f7c4ea62e4ca08be57bbfcf7fb118f93216e2e19",
+    "sql/03_inspect.sql": "68e501363827ad2c9c98898de9cae8f215ec08cf6cceb217c670b70f45801721",
+    "sql/04_team_history.sql": "6cd760442e2381e87ee3f1d6ce6bc34ed01f4ce2e1e9cd04b6ddfd14fd6ab3e7",
+    "sql/05_stage2_validation.sql": "e56958c129cc9b5d96099e2d986c1b6fb4db352a79bf07a93142a28b4d60e9d1",
+    "sql/06_stage2_inspect.sql": "9d51fef5e66350a39212695823624b3aaad10007e2ca3707b11d2115a33fb2b7",
+    "sql/07_player_game_features.sql": "bceea4a10aedce2595501854f9675324346101e840bc92b4296111cf189bd571",
+    "sql/08_stage3_summaries.sql": "1563cf8ba27ef82f555677242847f3e4afafb7323487ee029c781aedc0baf853",
+    "sql/09_stage3_validation.sql": "302c6312955f3c329a3702509069600396a549cf335e947a315271bbb7e13968",
+    "sql/10_stage3_inspect.sql": "9057a88b3a64199154d00f36f985d066fda5c09ef200bc4c5842705dc2bcd596",
+    "sql/11_stage4_features.sql": "7d58cd909e08a01a6f97a00eb8990da403104afd49f3d2e0f53b4b843bf795eb",
+    "sql/12_stage4_summaries.sql": "380a69243c812e8ca39cc7568611b60dd9b746ce132902f6bfe24359fde08e39",
+    "sql/13_stage4_validation.sql": "f05831909553c508ce760b8a4e82394425456dd8af5d5b92c716302fbcbfd6e3",
+    "sql/14_stage4_inspect.sql": "eafed298b43073b820926cba01580dde1d960134de34f9c1d5fba6435f4c90bf",
+    "tests/test_stage2.py": "22e53d209287e83075eefe41b71f924bc3345b1140364a81d6895a23c30b5d1c",
+    "tests/test_stage3.py": "adad3df2fd32b4187f6058705e710c3ec51760029798ce1b401026f75adef6f7",
+    "tests/test_stage4.py": "04afcfe158634278ff3c33743c08e17d7bbbb0f1e58bd699b3075099e03facd8"
+  },
+  "checks": [
+    {
+      "stage": 1,
+      "check": "clean_duplicate_player_game_groups",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 1,
+      "check": "clean_invalid_team_codes",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 1,
+      "check": "clean_missing_player_or_game_id",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 1,
+      "check": "clean_missing_ppr",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 1,
+      "check": "clean_out_of_scope_records",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 1,
+      "check": "clean_schedule_team_mismatch_or_missing",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 1,
+      "check": "clean_schedule_unmatched",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 1,
+      "check": "missing_clean_seasons",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 1,
+      "check": "missing_raw_seasons",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 1,
+      "check": "missing_schedule_seasons",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 1,
+      "check": "raw_duplicate_player_game_groups",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 1,
+      "check": "raw_missing_game_id",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 1,
+      "check": "raw_missing_player_id",
+      "severity": "WARN",
+      "problems": 236
+    },
+    {
+      "stage": 1,
+      "check": "raw_out_of_scope_seasons",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 1,
+      "check": "raw_schedule_season_week_type_mismatch",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 1,
+      "check": "raw_schedule_team_mismatch_or_missing",
+      "severity": "WARN",
+      "problems": 2
+    },
+    {
+      "stage": 1,
+      "check": "raw_schedule_unmatched",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 1,
+      "check": "regular_schedule_games_without_player_rows",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 1,
+      "check": "regular_schedule_unfinished_games",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 1,
+      "check": "schedule_duplicate_game_groups",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 1,
+      "check": "schedule_missing_game_id",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 1,
+      "check": "unexpected_regular_game_count",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 2,
+      "check": "asof_count_mismatch",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 2,
+      "check": "asof_current_or_future_date",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 2,
+      "check": "asof_duplicate_keys",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 2,
+      "check": "asof_missing_or_extra_keys",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 2,
+      "check": "first_meeting_flag_mismatch",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 2,
+      "check": "flags_duplicate_player_games",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 2,
+      "check": "flags_missing_or_extra_player_games",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 2,
+      "check": "history_duplicate_player_team",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 2,
+      "check": "history_summary_count_mismatch",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 2,
+      "check": "not_exactly_one_first_meeting_per_relationship",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 2,
+      "check": "opponent_prior_count_mismatch",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 2,
+      "check": "prior_meeting_count_mismatch",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 2,
+      "check": "revenge_below_four_earlier_games",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 2,
+      "check": "revenge_current_or_future_date",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 2,
+      "check": "revenge_duplicate_player_games",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 2,
+      "check": "revenge_label_mismatch",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 2,
+      "check": "revenge_missing_or_extra_games",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 2,
+      "check": "source_missing_dates_or_ids",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 2,
+      "check": "source_multiple_games_same_player_date",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 3,
+      "check": "analysis_below_four_prior_games",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 3,
+      "check": "analysis_duplicate_keys",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 3,
+      "check": "analysis_group_labels_mismatch",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 3,
+      "check": "analysis_groups_not_shared_feature_rows",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 3,
+      "check": "baseline_average_mismatch",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 3,
+      "check": "comparison_players_without_eligible_revenge",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 3,
+      "check": "current_game_in_baseline",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 3,
+      "check": "eligibility_mismatch",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 3,
+      "check": "features_duplicate_keys",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 3,
+      "check": "features_missing_or_extra_keys",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 3,
+      "check": "insufficient_history_has_effect",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 3,
+      "check": "nonfinite_metrics",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 3,
+      "check": "prior_counts_mismatch",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 3,
+      "check": "residual_formula_mismatch",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 3,
+      "check": "same_day_or_future_game_in_baseline",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 3,
+      "check": "sample_stddev_mismatch",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 3,
+      "check": "score_formula_or_availability_mismatch",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 3,
+      "check": "score_reason_mismatch",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 3,
+      "check": "stage2_fields_or_actual_changed",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 3,
+      "check": "stddev_status_mismatch",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 3,
+      "check": "summary_counts_or_exceeded_pct_mismatch",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 3,
+      "check": "undefined_stddev_has_score",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 3,
+      "check": "window_more_than_eight_or_invalid_rank",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 3,
+      "check": "window_not_exact_eight_most_recent",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 4,
+      "check": "analysis_not_shared_features",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 4,
+      "check": "baseline_mean_mismatch",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 4,
+      "check": "cohort_differs_from_validated_snapshot",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 4,
+      "check": "current_future_in_window",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 4,
+      "check": "departure_not_strictly_positive",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 4,
+      "check": "expected_or_residual_mismatch",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 4,
+      "check": "game_key_coverage",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 4,
+      "check": "group_label_mismatch",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 4,
+      "check": "invalid_denominator_has_ratio",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 4,
+      "check": "metric_eligibility_mismatch",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 4,
+      "check": "metric_key_coverage",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 4,
+      "check": "negative_usage_denominators",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 4,
+      "check": "nonfinite_metrics",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 4,
+      "check": "outlier_transform_invalid",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 4,
+      "check": "paired_players_missing_group",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 4,
+      "check": "position_opportunity_formula",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 4,
+      "check": "raw_sensitivity_changed_values",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 4,
+      "check": "window_counts_mismatch",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 4,
+      "check": "window_dates_mismatch",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 4,
+      "check": "window_exceeds_eight",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 4,
+      "check": "winsorized_changed_row_count",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 5,
+      "check": "required_stage4_files_and_hashes",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 5,
+      "check": "live_counts_match_saved_inference",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 5,
+      "check": "displayed_primary_matches_stage4_report",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 5,
+      "check": "plot_metrics_finite_or_documented_null",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 5,
+      "check": "stable_unique_player_ids",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 5,
+      "check": "all_position_distribution_queries",
+      "severity": "ERROR",
+      "problems": 0
+    },
+    {
+      "stage": 5,
+      "check": "all_example_and_baseline_queries",
+      "severity": "ERROR",
+      "problems": 0
+    }
+  ]
+}

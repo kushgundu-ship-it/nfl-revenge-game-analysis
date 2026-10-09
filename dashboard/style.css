@@ -1,0 +1,26 @@
+.block-container { max-width: 1210px; padding-top: 2.4rem; padding-bottom: 3rem; }
+h1 { font-family: Georgia, 'Times New Roman', serif !important; font-size: 3.2rem !important;
+     letter-spacing: -0.045em; line-height: 1.05 !important; font-weight: 500 !important; }
+h2 { font-family: Georgia, 'Times New Roman', serif !important; letter-spacing: -0.02em; }
+h3 { font-weight: 600 !important; }
+.eyebrow { color: #14796B; font-size: 0.72rem; font-weight: 750;
+           letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 0.65rem; }
+.lead { color: #526670; font-size: 1.12rem; max-width: 850px; line-height: 1.6; margin-bottom: 1.2rem; }
+.finding { background: #E8F0EA; border-left: 4px solid #14796B; padding: 1.1rem 1.4rem;
+           border-radius: 0 8px 8px 0; margin: 0.6rem 0 1rem; line-height: 1.6; }
+.finding strong { font-size: 1.05rem; }
+.brand { font-family: Georgia, serif; font-size: 1.55rem; line-height: 1.25; padding: 0.5rem 0 1rem; }
+.sidebar-note { color: #526670; font-size: 0.83rem; line-height: 1.55; }
+[data-testid="stMetric"] { background: #FFFFFF; border: 1px solid #E3E5DC; border-radius: 9px;
+                          padding: 1rem 1.2rem; min-height: 112px; }
+[data-testid="stMetricValue"] { font-size: 1.65rem; font-variant-numeric: tabular-nums; }
+[data-testid="stMetricLabel"] { font-size: 0.81rem; color: #526670; }
+[data-testid="stSidebar"] { border-right: 1px solid #E2E3DB; }
+[data-testid="stSidebar"] .block-container { padding-top: 1rem; }
+[data-testid="stCaptionContainer"] { color: #526670; }
+div[data-testid="stButton"] button { border-color: #CDD8D0; }
+@media (max-width: 800px) {
+  h1 { font-size: 2.25rem !important; }
+  .block-container { padding: 1.5rem 1rem; }
+  [data-testid="stMetricValue"] { font-size: 1.35rem; }
+}
