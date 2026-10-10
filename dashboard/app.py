@@ -63,7 +63,7 @@ def overview(bundle):
 <div class="hero-copy"><div class="eyebrow">NFL / The evidence</div>
 <h1>Is the revenge game <em>real?</em></h1>
 <p class="lead">Do NFL players outperform their recent baseline when facing a former team?</p>
-<p class="hero-note">A SQL-first study of performance, expectation, and the stories we tell about sport.</p></div>
+<p class="hero-note">Comparing players against their old teams with those same players in other games.</p></div>
 <figure><img src="data:image/png;base64,{stadium}" alt="An empty, team-neutral football stadium in warm afternoon light">
 <figcaption>Original AI-generated stadium image · No team affiliation</figcaption></figure>
 </section>''',unsafe_allow_html=True)
@@ -202,10 +202,10 @@ def patterns(bundle):
 
 
 def explorer(bundle):
-    intro('Player explorer','Trace a reunion, game by game.',
-          'Memorable games put the numbers in context. They do not replace the aggregate evidence.')
+    intro('Player explorer','Look up a player and a game.',
+          'See what happened against a former team and how it compared with recent games. One game does not tell the whole story.')
     examples = bundle['examples']
-    st.caption('Start with an inspected example, or search for any player below.')
+    st.caption('Choose one of these examples, or search for a player below.')
     for column,row in zip(st.columns(4),examples.itertuples()):
         if column.button(row.player_display_name,key=f'example_{row.player_id}',width='stretch'):
             st.session_state['player_id'] = row.player_id
@@ -255,8 +255,8 @@ def explorer(bundle):
 
 
 def methods(bundle):
-    intro('Methods & limits','A result you can trace.',
-          'SQL defines the cohort and its past-only features. Resampling accounts for repeated games within players.')
+    intro('Methods & limits','How the analysis works',
+          'Each game is compared with earlier appearances. The statistical tests account for players appearing more than once.')
     diagram = base64.b64encode((ROOT/'docs/data_flow.svg').read_bytes()).decode('ascii')
     st.markdown(f'<div class="flow-diagram" tabindex="0" aria-label="Scrollable data-flow diagram">'
                 f'<img src="data:image/svg+xml;base64,{diagram}" alt="Raw data to cleaned games, former-team history, '
@@ -302,11 +302,11 @@ def methods(bundle):
 
 def main():
     with st.sidebar:
-        st.markdown('<div class="eyebrow">FIELD NOTES / 01</div><div class="brand">The Revenge Game</div>',unsafe_allow_html=True)
+        st.markdown('<div class="eyebrow">NFL PLAYER ANALYSIS</div><div class="brand">The Revenge Game</div>',unsafe_allow_html=True)
         page = st.radio('Navigate',['Overview','Patterns','Player explorer','Methods & limits'],key='page')
         st.divider()
-        st.markdown('<div class="sidebar-note">An NFL research notebook.<br>SQL · DuckDB · Python<br><br>'
-                    'Read the aggregate evidence first.<br>Then trace the games behind it.</div>',unsafe_allow_html=True)
+        st.markdown('<div class="sidebar-note">SQL · DuckDB · Python<br><br>'
+                    'Compare the overall results,<br>then look up individual games.</div>',unsafe_allow_html=True)
     try:
         bundle = cached_bundle(REPOSITORY.signature())
         with st.sidebar:

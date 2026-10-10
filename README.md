@@ -2,22 +2,30 @@
 
 **Do NFL players outperform their own recent baseline when facing a former team?**
 
-A SQL-first research project with a small, local Streamlit dashboard. It follows
-2015–2025 regular-season QB, RB, WR, and TE appearances from nflverse, with traceable
-game histories and uncertainty estimates—not just a leaderboard of memorable games.
+The revenge-game story is familiar: a player faces his old team and has something
+to prove. Does that show up in the numbers?
+
+This project uses NFL player stats from 2015–2025 to compare how players perform
+against former teams with how those same players perform in other games. SQL and
+DuckDB handle the game histories, Python handles the statistical tests, and a local
+Streamlit dashboard lets you explore the results.
 
 ## The finding
 
 Across **359 players, 875 revenge performances, and 23,434 non-revenge performances**,
-the primary equal-player mean residual difference is **+0.067 PPR**:
+the average difference was **+0.067 PPR**, after subtracting each game's recent
+baseline and giving every player equal weight:
 
 - **95% player-clustered bootstrap CI: −0.443 to +0.604 PPR**
 - **Two-sided player sign-flip p-value: 0.8124**
 - **No statistically distinguishable mean revenge effect was found.**
 
-The point estimate is less than one tenth of a PPR point. Failing to reject zero
-does not prove no effect; statistical significance is not football importance.
-These are observational comparisons, not evidence that revenge causes performance.
+That is less than one tenth of a fantasy point. The confidence interval includes
+both small negative and positive effects, so these data do not give a clear reason
+to expect a mean revenge-game boost. That does not prove the effect is zero. Even a
+statistically significant difference would need to be large enough to matter on
+the field or in fantasy football. This comparison cannot tell us whether revenge
+causes a change in performance.
 
 The pooled, game-weighted mean is −0.021 PPR (95% CI −0.406 to +0.381). Trimming and
 winsorization leave mean contrasts near zero. The positive secondary average of
@@ -29,9 +37,9 @@ mean result. Usage and efficiency patterns vary by position and valid sample siz
 
 ![Local dashboard headline](docs/screenshots/stage5_overview.jpg)
 
-The local presentation pairs a forest-green/ivory editorial theme with an
-[original, team-neutral stadium image](dashboard/assets/editorial-stadium.md).
-The styling does not change the analysis.
+The dashboard shows the overall result, position breakdowns, and individual game
+histories. The stadium image is [AI-generated](dashboard/assets/editorial-stadium.md)
+and does not depict a real NFL venue.
 
 From this repository, with the validated database and Stage 4 outputs already present:
 
@@ -41,11 +49,10 @@ python -m pip install -r requirements-dashboard.txt
 python -m streamlit run dashboard/app.py
 ```
 
-Open **http://127.0.0.1:8502**. Four sections cover the headline evidence, exploratory
-patterns, a searchable player explorer, and methods/limitations. Start with Tom
-Brady, Matthew Stafford, Davante Adams, or Jerry Jeudy; inspect the actual prior
-appearances behind each selected game's baseline. The dashboard reads saved
-inference and DuckDB views; it never rebuilds or changes analytical records.
+Open **http://127.0.0.1:8502**. You can browse the results, compare positions, or look
+up a player. Tom Brady, Matthew Stafford, Davante Adams, and Jerry Jeudy are included
+as starting examples. Select a game to see the earlier appearances used to set its
+baseline. The dashboard reads saved results and DuckDB views without changing them.
 
 ### Fresh setup
 
@@ -94,7 +101,7 @@ Stage 4 outputs produce an actionable dashboard message instead of invented valu
    player sign-flip test (seed `20261009`). Usage, valid-denominator efficiency,
    subgroup summaries, and outlier checks support interpretation.
 
-SQL owns the analytical definitions. Python performs resampling and presentation.
+The calculations are defined in SQL. Python runs the resampling tests and dashboard.
 Receptions remain separate from opportunities; undefined efficiency ratios and
 standardized scores remain missing, not zero. [Data dictionary](docs/data_dictionary.md).
 
@@ -139,5 +146,4 @@ Detailed checkpoints remain available: [Stage 1](docs/stage1_results.md) ·
 Source: [nflverse statistics](https://nflreadr.nflverse.com/reference/load_player_stats.html)
 and [schedules](https://nflreadr.nflverse.com/reference/load_schedules.html).
 
-Local portfolio presentation only. No deployment, publication, commit, or push is
-part of this stage.
+The dashboard runs locally; there is no hosted version.
