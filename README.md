@@ -29,6 +29,10 @@ mean result. Usage and efficiency patterns vary by position and valid sample siz
 
 ![Local dashboard headline](docs/screenshots/stage5_overview.jpg)
 
+The local presentation pairs a forest-green/ivory editorial theme with an
+[original, team-neutral stadium image](dashboard/assets/editorial-stadium.md).
+The styling does not change the analysis.
+
 From this repository, with the validated database and Stage 4 outputs already present:
 
 ```bash
@@ -37,7 +41,7 @@ python -m pip install -r requirements-dashboard.txt
 python -m streamlit run dashboard/app.py
 ```
 
-Open **http://127.0.0.1:8501**. Four sections cover the headline evidence, exploratory
+Open **http://127.0.0.1:8502**. Four sections cover the headline evidence, exploratory
 patterns, a searchable player explorer, and methods/limitations. Start with Tom
 Brady, Matthew Stafford, Davante Adams, or Jerry Jeudy; inspect the actual prior
 appearances behind each selected game's baseline. The dashboard reads saved

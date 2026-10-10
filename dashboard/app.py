@@ -1,5 +1,6 @@
 """Run from the repository root: python -m streamlit run dashboard/app.py"""
 from pathlib import Path
+import base64
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -43,6 +44,7 @@ def table(frame,rename=None,decimals=3):
             {'raw':'Raw','trimmed_1_99':'Trimmed 1%','winsorized_1_99':'Winsorized 1%'})
     st.dataframe(display.style.format(precision=decimals,na_rep='Unavailable'),
                  hide_index=True,width='stretch')
+    st.markdown('<p class="table-hint">Swipe the table horizontally to see all columns.</p>',unsafe_allow_html=True)
 
 
 def intro(section,title,description):
@@ -56,8 +58,15 @@ def overview(bundle):
     inference = tables['inference']
     primary = inference.set_index('effect').loc['equal_player_mean']
     copy = headline(inference)
-    intro('The evidence','Is the revenge game real?',
-          'Do NFL players outperform their recent baseline when facing a former team?')
+    stadium = base64.b64encode((ROOT/'dashboard/assets/editorial-stadium.png').read_bytes()).decode('ascii')
+    st.markdown(f'''<section class="editorial-hero" aria-label="Research introduction">
+<div class="hero-copy"><div class="eyebrow">NFL / The evidence</div>
+<h1>Is the revenge game <em>real?</em></h1>
+<p class="lead">Do NFL players outperform their recent baseline when facing a former team?</p>
+<p class="hero-note">A SQL-first study of performance, expectation, and the stories we tell about sport.</p></div>
+<figure><img src="data:image/png;base64,{stadium}" alt="An empty, team-neutral football stadium in warm afternoon light">
+<figcaption>Original AI-generated stadium image · No team affiliation</figcaption></figure>
+</section>''',unsafe_allow_html=True)
     st.caption(f"{int(primary.players):,} players · {int(primary.revenge_n):,} revenge performances · "
                f"{int(primary.non_revenge_n):,} non-revenge performances · Same-player comparison")
     columns = st.columns([1,1.3,1])
@@ -248,7 +257,11 @@ def explorer(bundle):
 def methods(bundle):
     intro('Methods & limits','A result you can trace.',
           'SQL defines the cohort and its past-only features. Resampling accounts for repeated games within players.')
-    st.image(str(ROOT/'docs/data_flow.svg'),width='stretch')
+    diagram = base64.b64encode((ROOT/'docs/data_flow.svg').read_bytes()).decode('ascii')
+    st.markdown(f'<div class="flow-diagram" tabindex="0" aria-label="Scrollable data-flow diagram">'
+                f'<img src="data:image/svg+xml;base64,{diagram}" alt="Raw data to cleaned games, former-team history, '
+                'rolling features, same-player comparisons, inference, and dashboard"></div>',unsafe_allow_html=True)
+    st.markdown('<p class="table-hint">Swipe the diagram horizontally to follow the data flow.</p>',unsafe_allow_html=True)
     st.caption('All dashboard database connections are read-only. Aggregate inference is loaded from saved Stage 4 outputs.')
     st.subheader('How to read the evidence')
     st.markdown('1. **Identify former teams:** at least four strictly earlier recorded appearances for the current opponent.\n'

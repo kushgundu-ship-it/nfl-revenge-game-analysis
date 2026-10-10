@@ -4,11 +4,11 @@ import pandas as pd
 
 from dashboard.data import available_efficiency, require_finite
 
-TEAL = '#14796B'
-SLATE = '#718896'
-ORANGE = '#BB642F'
+TEAL = '#0B5D3B'
+SLATE = '#6F8174'
+ORANGE = '#A5812C'
 GROUPS = {'revenge':'Revenge','non_revenge':'Non-revenge'}
-GROUP_SCALE = alt.Scale(domain=['Revenge','Non-revenge'],range=[TEAL,SLATE])
+GROUP_SCALE = alt.Scale(domain=['Revenge','Non-revenge'],range=[TEAL,ORANGE])
 
 
 def inline_spec(chart):
@@ -23,14 +23,16 @@ def inline_spec(chart):
 
 
 def finish(chart,height=300):
-    return chart.properties(height=height).configure_view(stroke=None).configure_axis(
-        labelFontSize=12,titleFontSize=12,labelColor='#425660',titleColor='#425660',
-        gridColor='#E8E7E0',domain=False,tickColor='#D8D8CF',titlePadding=12
-    ).configure_legend(labelFontSize=12,titleFontSize=12,orient='top',title=None)
+    return chart.properties(height=height,background='#F8F3E9').configure_view(stroke=None).configure_axis(
+        labelFontSize=12,titleFontSize=12,labelColor='#385044',titleColor='#18352B',
+        gridColor='#E1E2D5',domain=False,tickColor='#C3CCBD',titlePadding=12,
+        labelFont='Arial',titleFont='Arial',tickCount=6
+    ).configure_legend(labelFontSize=12,titleFontSize=12,labelColor='#18352B',orient='top',title=None,
+                       labelLimit=220,symbolOpacity=1)
 
 
 def zero_line():
-    return alt.Chart(pd.DataFrame({'zero':[0]})).mark_rule(color='#849098',strokeDash=[4,4]).encode(x='zero:Q')
+    return alt.Chart(pd.DataFrame({'zero':[0]})).mark_rule(color='#738173',strokeDash=[4,4]).encode(x='zero:Q')
 
 
 def interval(inference):
@@ -66,7 +68,7 @@ def group_bars(frame,category,value='mean_residual',axis_title='Mean residual (P
     require_finite(frame,[value])
     data = frame.assign(group=frame.game_group.map(GROUPS))
     present = [group for group in GROUPS.values() if group in set(data.group)]
-    group_scale = alt.Scale(domain=present,range=[TEAL if group=='Revenge' else SLATE for group in present])
+    group_scale = alt.Scale(domain=present,range=[TEAL if group=='Revenge' else ORANGE for group in present])
     chart = alt.Chart(data).mark_bar(cornerRadiusEnd=3).encode(
         x=alt.X(f'{value}:Q',title=axis_title,axis=alt.Axis(tickCount=6)),
         y=alt.Y(f'{category}:N',title=None,sort=order or 'ascending',axis=alt.Axis(labelLimit=260)),

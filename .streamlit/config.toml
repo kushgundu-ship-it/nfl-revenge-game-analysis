@@ -1,6 +1,6 @@
 [server]
 address = "127.0.0.1"
-port = 8501
+port = 8502
 headless = true
 fileWatcherType = "none"
 
@@ -9,8 +9,12 @@ gatherUsageStats = false
 
 [theme]
 base = "light"
-primaryColor = "#14796B"
-backgroundColor = "#FAF9F5"
-secondaryBackgroundColor = "#F0EEE7"
-textColor = "#182C36"
+primaryColor = "#0B5D3B"
+backgroundColor = "#F8F3E9"
+secondaryBackgroundColor = "#EDEEE4"
+textColor = "#18352B"
 font = "sans serif"
+linkColor = "#0B5D3B"
+borderColor = "#BFCBBE"
+dataframeBorderColor = "#CDD2C2"
+dataframeHeaderBackgroundColor = "#DCE7DE"

@@ -4,6 +4,31 @@ Implemented October 8, 2026. Presentation only: Stage 1–4 analytical definitio
 source files, database, report tables, and checkpoint reports are unchanged.
 No deployment, publication, commit, or push was performed.
 
+## Presentation refresh — October 9, 2026
+
+The dashboard now uses forest green, warm ivory, soft sage, and restrained gold,
+with editorial serif headings and a responsive text/image opening. The original
+team-neutral stadium illustration is explicitly labeled AI-generated; its
+[provenance and exact prompt](../dashboard/assets/editorial-stadium.md) are saved
+with the asset. No NFL logo, team branding, text, or watermark appears in the image.
+
+Only presentation files, documentation, and screenshots changed. SQL, analytical
+data access, statistics, filters, navigation, tests, dependencies, and conclusions
+are preserved. The default local port is now **8502**.
+
+The existing **11 Stage 5 tests passed**, and the read-only validator passed all
+**91 error checks**, with all **60 protected-file hashes unchanged**. An earlier
+test run timed out during the interrupted session; a clean rerun passed without
+changing tests or timeout thresholds. The original full-suite validation below is
+the Stage 5 checkpoint, not a claim that all 37 tests were rerun for this styling edit.
+
+Every page was visually inspected in Chrome at **1366 × 900** and **390 × 844**.
+Mobile navigation, stacked metrics, filters, and the player explorer remain usable.
+Wide tables and the diagram scroll horizontally rather than reducing text to an
+unreadable size; the page itself does not overflow. All six existing screenshots
+were replaced, including the README preview, and a [mobile preview](screenshots/stage5_mobile.jpg)
+was added. No commit, push, or deployment was performed.
+
 ## The story shown in the dashboard
 
 **Primary equal-player mean difference: +0.067 PPR.** The 95% player-clustered
@@ -49,7 +74,7 @@ python -m pip install -r requirements-dashboard.txt
 python -m streamlit run dashboard/app.py
 ```
 
-Open <http://127.0.0.1:8501>. The app binds to loopback, not a public network
+Open <http://127.0.0.1:8502>. The app binds to loopback, not a public network
 interface. Stop with Ctrl+C before rebuilding data. Restart after source edits
 because file watching is disabled. The [README](../README.md) has fresh-machine
 setup and ordered pipeline commands.
@@ -138,7 +163,7 @@ version warning, but all chart types render correctly in the verified browser.
 
 Screenshots document the actual local build:
 
-- [Headline at 1280 × 800](screenshots/stage5_overview.jpg)
+- [Redesigned headline at 1366 × 900](screenshots/stage5_overview.jpg)
 - [Residual distributions](screenshots/stage5_distribution.jpg)
 - [Usage comparison](screenshots/stage5_usage.jpg)
 - [Sensitivity comparison](screenshots/stage5_sensitivity.jpg)
@@ -161,7 +186,7 @@ Screenshots document the actual local build:
 | `tests/test_stage5.py` | Data contracts, chart checks, and Streamlit interaction regression tests. |
 | `docs/data_flow.svg` | The raw-data-to-dashboard diagram used in both the app and README. |
 | `docs/stage5_results.md` | This implementation, validation, and handoff record. |
-| `docs/screenshots/stage5_*.jpg` | Six browser captures showing the verified presentation. |
+| `docs/screenshots/stage5_*.jpg` | Seven refreshed browser captures, including the mobile presentation. |
 | `reports/stage5_validation.json` | Generated validation results and protected-file hashes. |
 | `data/processed/stage5_preservation_baseline.json` | Local, Git-ignored pre-edit preservation checkpoint. |
 
