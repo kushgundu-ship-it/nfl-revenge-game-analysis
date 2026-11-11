@@ -1,16 +1,15 @@
+![The Revenge Game — fall football, rendered in Blender](docs/screenshots/readme-banner.png)
+
 # The Revenge Game
 
-**Do NFL players outperform their own recent baseline when facing a former team?**
-
-The revenge-game story is familiar: a player faces his old team and has something
-to prove. Does that show up in the numbers?
+Does playing your old team actually bring out your best?
 
 This project uses NFL player stats from 2015–2025 to compare how players perform
 against former teams with how those same players perform in other games. SQL and
 DuckDB handle the game histories, Python handles the statistical tests, and a local
 Streamlit dashboard lets you explore the results.
 
-## The finding
+## What turned up
 
 Across **359 players, 875 revenge performances, and 23,434 non-revenge performances**,
 the average difference was **+0.067 PPR**, after subtracting each game's recent
@@ -20,17 +19,9 @@ baseline and giving every player equal weight:
 - **Two-sided player sign-flip p-value: 0.8124**
 - **No statistically distinguishable mean revenge effect was found.**
 
-That is less than one tenth of a fantasy point. The confidence interval includes
-both small negative and positive effects, so these data do not give a clear reason
-to expect a mean revenge-game boost. That does not prove the effect is zero. Even a
-statistically significant difference would need to be large enough to matter on
-the field or in fantasy football. This comparison cannot tell us whether revenge
-causes a change in performance.
+There was no clear revenge-game boost. Small effects in either direction are
+still plausible, and this observational comparison cannot establish cause.
 
-The pooled, game-weighted mean is −0.021 PPR (95% CI −0.406 to +0.381). Trimming and
-winsorization leave mean contrasts near zero. The positive secondary average of
-within-player median contrasts is exploratory and does not overturn the primary
-mean result. Usage and efficiency patterns vary by position and valid sample size.
 [Read the full inference report](docs/stage4_results.md).
 
 ## Run the local dashboard
@@ -54,7 +45,8 @@ up a player. Tom Brady, Matthew Stafford, Davante Adams, and Jerry Jeudy are inc
 as starting examples. Select a game to see the earlier appearances used to set its
 baseline. The dashboard reads saved results and DuckDB views without changing them.
 
-### Fresh setup
+<details>
+<summary>First-time setup and rebuilding the data</summary>
 
 Python **3.9.6** was used for validation. Python 3.9+ is required by the pinned
 dashboard stack. Data files are local artifacts and are not tracked in Git.
@@ -86,7 +78,9 @@ may invalidate the Stage 5 byte-level preservation baseline; do not overwrite it
 just to conceal a mismatch. Review the changed snapshot first. Missing or inconsistent
 Stage 4 outputs produce an actionable dashboard message instead of invented values.
 
-## Method and technology
+</details>
+
+## How it works
 
 **DuckDB 1.4.4 · SQL · Python · Streamlit 1.50.0 · Altair 5.5.0 · pandas 2.3.3**
 
@@ -105,9 +99,8 @@ The calculations are defined in SQL. Python runs the resampling tests and dashbo
 Receptions remain separate from opportunities; undefined efficiency ratios and
 standardized scores remain missing, not zero. [Data dictionary](docs/data_dictionary.md).
 
-![Data flow from raw data to dashboard](docs/data_flow.svg)
-
-## Repository guide
+<details>
+<summary>Repository guide and validation</summary>
 
 | Location | What to review |
 | --- | --- |
@@ -146,4 +139,9 @@ Detailed checkpoints remain available: [Stage 1](docs/stage1_results.md) ·
 Source: [nflverse statistics](https://nflreadr.nflverse.com/reference/load_player_stats.html)
 and [schedules](https://nflreadr.nflverse.com/reference/load_schedules.html).
 
+</details>
+
+---
+
 The dashboard runs locally; there is no hosted version.
+Banner modeled and rendered in Blender · [Render script](scripts/render_readme_banner.py)
