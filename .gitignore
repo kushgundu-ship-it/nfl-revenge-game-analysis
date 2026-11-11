@@ -12,3 +12,7 @@ data/processed/*
 *.duckdb
 *.duckdb.wal
 *.partial
+
+# Reviewed snapshot required by the public dashboard.
+!data/processed/nfl.duckdb
+!data/processed/stage4_validation_report.json

@@ -36,7 +36,7 @@ without changing them.
 <summary>First-time setup and rebuilding the data</summary>
 
 Python **3.9.6** was used for validation. Python 3.9+ is required by the pinned
-dashboard stack. Data files are local artifacts and are not tracked in Git.
+dashboard stack. The reviewed database is included; raw downloads are not tracked in Git.
 Initial ingestion requires internet access to download the nflverse snapshot.
 
 ```bash
@@ -99,7 +99,7 @@ standardized scores remain missing, not zero. [Data dictionary](docs/data_dictio
 | `reports/tables/stage4_*.csv` | Twelve saved analytical tables, including inference and bootstrap draws |
 | `reports/stage5_validation.json` | Latest live SQL/dashboard checks and preservation hashes |
 | `tests/` | Synthetic, regression, reproducibility, and dashboard interaction tests |
-| `data/raw/`, `data/processed/` | Local source snapshot, DuckDB database, and checkpoint reports (Git-ignored) |
+| `data/raw/`, `data/processed/` | Local downloads and the reviewed database used by the dashboard |
 
 ## Validation and limitations
 
@@ -130,5 +130,5 @@ and [schedules](https://nflreadr.nflverse.com/reference/load_schedules.html).
 
 ---
 
-The dashboard runs locally; there is no hosted version.
+The dashboard can run locally or on [Streamlit Community Cloud](docs/hosting.md).
 [Blender banner source](scripts/render_readme_banner.py).
