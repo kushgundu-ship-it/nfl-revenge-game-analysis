@@ -35,10 +35,10 @@ for i in range(65):
     o=bpy.context.object; o.scale.y=1.6; o.rotation_euler.z=random.uniform(0,6.28); o.data.materials.append(random.choice(colors))
 def label(text,loc,size):
     c=bpy.data.curves.new(text,'FONT'); c.body=text; c.size=size
+    c.font=bpy.data.fonts.load('/System/Library/Fonts/Supplemental/Georgia.ttf')
     o=bpy.data.objects.new(text,c); bpy.context.collection.objects.link(o); o.location=loc; c.materials.append(ivory)
-label('THE REVENGE GAME',(-9,.25,.02),1.0)
-label('OLD TEAMS.  NEW JERSEYS.  SAME PLAYER.',(-8.95,-.75,.02),.29)
-label('NFL  /  2015 - 2025',(-8.95,1.8,.02),.25)
+label('The Revenge',(-8.7,.4,.02),1.65)
+label('Game',(-8.7,-1.5,.02),1.65)
 bpy.ops.object.light_add(type='AREA',location=(-3,-1,10))
 bpy.context.object.data.energy=1800; bpy.context.object.data.size=8; bpy.context.object.data.color=(1,.79,.55)
 bpy.ops.object.camera_add(location=(0,-5,20))

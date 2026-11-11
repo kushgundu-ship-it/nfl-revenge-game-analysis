@@ -1,15 +1,9 @@
 ![The Revenge Game — fall football, rendered in Blender](docs/screenshots/readme-banner.png)
 
-# The Revenge Game
+NFL players facing their former teams, 2015–2025. This project compares those
+games with each player's other appearances, accounting for recent form.
 
-Does playing your old team actually bring out your best?
-
-This project uses NFL player stats from 2015–2025 to compare how players perform
-against former teams with how those same players perform in other games. SQL and
-DuckDB handle the game histories, Python handles the statistical tests, and a local
-Streamlit dashboard lets you explore the results.
-
-## What turned up
+## Results
 
 Across **359 players, 875 revenge performances, and 23,434 non-revenge performances**,
 the average difference was **+0.067 PPR**, after subtracting each game's recent
@@ -17,7 +11,6 @@ baseline and giving every player equal weight:
 
 - **95% player-clustered bootstrap CI: −0.443 to +0.604 PPR**
 - **Two-sided player sign-flip p-value: 0.8124**
-- **No statistically distinguishable mean revenge effect was found.**
 
 There was no clear revenge-game boost. Small effects in either direction are
 still plausible, and this observational comparison cannot establish cause.
@@ -26,11 +19,7 @@ still plausible, and this observational comparison cannot establish cause.
 
 ## Run the local dashboard
 
-![Local dashboard headline](docs/screenshots/stage5_overview.jpg)
-
-The dashboard shows the overall result, position breakdowns, and individual game
-histories. The stadium image is [AI-generated](dashboard/assets/editorial-stadium.md)
-and does not depict a real NFL venue.
+Compare positions, look up a player, or inspect the games behind a baseline.
 
 From this repository, with the validated database and Stage 4 outputs already present:
 
@@ -40,10 +29,8 @@ python -m pip install -r requirements-dashboard.txt
 python -m streamlit run dashboard/app.py
 ```
 
-Open **http://127.0.0.1:8502**. You can browse the results, compare positions, or look
-up a player. Tom Brady, Matthew Stafford, Davante Adams, and Jerry Jeudy are included
-as starting examples. Select a game to see the earlier appearances used to set its
-baseline. The dashboard reads saved results and DuckDB views without changing them.
+Open [localhost:8502](http://127.0.0.1:8502). The dashboard reads saved results
+without changing them.
 
 <details>
 <summary>First-time setup and rebuilding the data</summary>
@@ -82,7 +69,7 @@ Stage 4 outputs produce an actionable dashboard message instead of invented valu
 
 ## How it works
 
-**DuckDB 1.4.4 · SQL · Python · Streamlit 1.50.0 · Altair 5.5.0 · pandas 2.3.3**
+Built with SQL, DuckDB, Python, and Streamlit.
 
 1. Clean source statistics and schedules; retain stable player and game IDs.
 2. Label a former opponent only after **four strictly earlier recorded appearances**
@@ -144,4 +131,4 @@ and [schedules](https://nflreadr.nflverse.com/reference/load_schedules.html).
 ---
 
 The dashboard runs locally; there is no hosted version.
-Banner modeled and rendered in Blender · [Render script](scripts/render_readme_banner.py)
+[Blender banner source](scripts/render_readme_banner.py).
